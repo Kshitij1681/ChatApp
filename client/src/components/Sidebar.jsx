@@ -8,6 +8,7 @@ export default function Sidebar({
   status,
   conversations,
   activeId,
+  hiddenOnMobile,
   onOpen,
   onStart,
   onJump,
@@ -71,7 +72,11 @@ export default function Sidebar({
   }
 
   return (
-    <aside className="flex w-[19rem] shrink-0 flex-col border-r border-line bg-surface max-md:w-[15rem]">
+    <aside
+      className={`flex w-full flex-col border-line bg-surface md:w-[19rem] md:shrink-0 md:border-r ${
+        hiddenOnMobile ? "max-md:hidden" : ""
+      }`}
+    >
       <header className="border-b border-line px-4 pt-4 pb-3">
         <div className="flex items-baseline justify-between">
           <span className="font-display text-lg font-semibold tracking-tight">Aerogramme</span>

@@ -47,10 +47,13 @@ export default function Composer({ conversationId, peerName, disabled, onSend, o
     textareaRef.current?.focus();
   }, [conversationId]);
 
-  useEffect(() => () => {
-    clearTimeout(stopTimer.current);
-    abortRef.current?.abort();
-  }, []);
+  useEffect(
+    () => () => {
+      clearTimeout(stopTimer.current);
+      abortRef.current?.abort();
+    },
+    [],
+  );
 
   function signalTyping() {
     const now = Date.now();
@@ -184,7 +187,7 @@ export default function Composer({ conversationId, peerName, disabled, onSend, o
 
   return (
     <div
-      className="relative border-t border-line bg-surface px-4 py-3"
+      className="relative border-t border-line bg-surface px-3 py-2.5 md:px-4 md:py-3"
       onDragOver={(e) => {
         e.preventDefault();
         setDragging(true);
@@ -212,23 +215,16 @@ export default function Composer({ conversationId, peerName, disabled, onSend, o
         </p>
       ) : null}
 
-      {attachment ? (
-        <AttachmentChip attachment={attachment} onRemove={clearAttachment} />
-      ) : null}
+      {attachment ? <AttachmentChip attachment={attachment} onRemove={clearAttachment} /> : null}
 
       <div className="relative flex items-end gap-2 rounded-md border border-line bg-raised px-3 py-2 focus-within:border-wire">
-        <input
-          ref={fileInputRef}
-          type="file"
-          className="hidden"
-          onChange={(e) => attach(e.target.files?.[0])}
-        />
+        <input ref={fileInputRef} type="file" className="hidden" onChange={(e) => attach(e.target.files?.[0])} />
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={disabled || !!attachment}
           aria-label="Attach a file"
-          className="grid size-8 shrink-0 place-items-center rounded-full text-ink-soft transition-colors hover:bg-ground hover:text-ink disabled:opacity-30"
+          className="grid size-8 shrink-0 place-items-center rounded-full text-ink-soft transition-colors hover:bg-ground hover:text-ink disabled:opacity-30 max-md:size-9"
         >
           <svg viewBox="0 0 20 20" className="size-4" aria-hidden="true">
             <path
@@ -241,6 +237,8 @@ export default function Composer({ conversationId, peerName, disabled, onSend, o
           </svg>
         </button>
 
+        {/* 16px on phones rather than the 15px body size: iOS Safari zooms the
+            page in on a focused input under 16px, and never zooms back out. */}
         <textarea
           ref={textareaRef}
           rows={1}
@@ -255,29 +253,16 @@ export default function Composer({ conversationId, peerName, disabled, onSend, o
           onPaste={onPaste}
           placeholder={disabled ? "This account was deleted" : `Message ${peerName ?? ""}`}
           aria-label="Message"
-          className="scroll-thin max-h-40 flex-1 resize-none bg-transparent leading-relaxed outline-none placeholder:text-faint disabled:cursor-not-allowed"
+          className="scroll-thin max-h-40 flex-1 resize-none bg-transparent leading-relaxed outline-none placeholder:text-faint disabled:cursor-not-allowed max-md:text-base"
         />
 
-        {remaining < 200 ? (
-          <span className={`data self-center ${remaining < 0 ? "text-post" : "text-faint"}`}>{remaining}</span>
-        ) : null}
+        {remaining < 200 ? <span className={`data self-center ${remaining < 0 ? "text-post" : "text-faint"}`}>{remaining}</span> : null}
 
         {/* Recording replaces typing, so these hide once there's text to send. */}
         {!value.trim() && !attachment ? (
           <>
-            <Recorder
-              mode="audio"
-              disabled={disabled}
-              onRecorded={sendRecording}
-              onError={setRecordError}
-              onBusyChange={setRecording}
-            />
-            <Recorder
-              mode="video"
-              disabled={disabled || recording}
-              onRecorded={sendRecording}
-              onError={setRecordError}
-            />
+            <Recorder mode="audio" disabled={disabled} onRecorded={sendRecording} onError={setRecordError} onBusyChange={setRecording} />
+            <Recorder mode="video" disabled={disabled || recording} onRecorded={sendRecording} onError={setRecordError} />
           </>
         ) : null}
 
@@ -286,7 +271,7 @@ export default function Composer({ conversationId, peerName, disabled, onSend, o
           onClick={submit}
           disabled={!canSend}
           aria-label="Send"
-          className="grid size-8 shrink-0 place-items-center rounded-full bg-post text-white transition-opacity disabled:opacity-30"
+          className="grid size-8 shrink-0 place-items-center rounded-full bg-post text-white transition-opacity disabled:opacity-30 max-md:size-9 rotate-180"
         >
           <svg viewBox="0 0 20 20" className="size-4" aria-hidden="true">
             <path d="M2 10 18 3l-4.5 7L18 17 2 10z" fill="currentColor" />
@@ -320,9 +305,7 @@ function AttachmentChip({ attachment, onRemove }) {
                 style={{ width: `${fileId ? 100 : pct}%` }}
               />
             </div>
-            <span className="data shrink-0 text-faint">
-              {fileId ? bytesOf(file.size) : `${pct}%`}
-            </span>
+            <span className="data shrink-0 text-faint">{fileId ? bytesOf(file.size) : `${pct}%`}</span>
           </div>
         )}
       </div>

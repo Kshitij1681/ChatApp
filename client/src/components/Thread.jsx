@@ -13,6 +13,7 @@ export default function Thread({
   hasNewer,
   highlightId,
   peerTyping,
+  onBack,
   onSend,
   onTyping,
   onLoadOlder,
@@ -75,9 +76,29 @@ export default function Thread({
 
   return (
     <>
-      <header className="relative border-b border-line bg-surface px-5 py-3">
+      <header className="relative border-b border-line bg-surface px-3 py-3 md:px-5">
         <div className="airmail-edge absolute inset-x-0 top-0 h-[3px]" />
         <div className="flex items-center gap-3">
+          {/* Below md the thread has replaced the list, so this is the only way
+              back to it. Hidden from md up, where both panes are on screen and
+              a back arrow would point at something already visible. */}
+          <button
+            type="button"
+            onClick={onBack}
+            aria-label="Back to conversations"
+            className="-ml-1 grid size-9 shrink-0 place-items-center rounded-sm text-faint hover:bg-raised hover:text-ink md:hidden"
+          >
+            <svg viewBox="0 0 20 20" className="size-5" aria-hidden="true">
+              <path
+                d="M12.5 4 6.5 10l6 6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
           <Avatar user={peer} size={38} showPresence />
           <div className="min-w-0 flex-1">
             <p className="truncate font-medium">{peer?.displayName ?? "Unknown"}</p>
@@ -109,7 +130,7 @@ export default function Thread({
       <div
         ref={scrollerRef}
         onScroll={onScroll}
-        className="scroll-thin min-h-0 flex-1 overflow-y-auto px-5 py-4"
+        className="scroll-thin min-h-0 flex-1 overflow-y-auto px-3 py-4 md:px-5"
       >
         {/* The only account this reader gets of where their history went, so it
             waits to be acknowledged rather than fading on its own. */}
@@ -191,7 +212,7 @@ export default function Thread({
             setPinned(true);
             bottomRef.current?.scrollIntoView({ behavior: hasNewer ? "auto" : "smooth", block: "end" });
           }}
-          className="data absolute right-6 bottom-24 rounded-full border border-line bg-raised px-3 py-1.5 shadow-md hover:border-wire"
+          className="data absolute right-6 bottom-24 rounded-full border border-line bg-raised px-3 py-1.5 shadow-md hover:border-wire max-md:right-3 max-md:bottom-20"
         >
           ↓ {hasNewer ? "Back to latest" : "Latest"}
         </button>

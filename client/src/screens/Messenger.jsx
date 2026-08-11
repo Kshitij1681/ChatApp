@@ -429,11 +429,19 @@ export default function Messenger({ me, onSignedOut }) {
 
   return (
     <div className="flex h-dvh bg-ground">
+      {/*
+       * Below md there is only room for one pane, so `activeId` decides which
+       * one is on screen: no thread open means the list is the app, opening one
+       * replaces it, and the back arrow in the thread header clears it again.
+       * Both panes stay mounted either way — hiding rather than unmounting keeps
+       * the thread's scroll position and the sidebar's search across a swap.
+       */}
       <Sidebar
         me={me}
         status={status}
         conversations={conversations}
         activeId={activeId}
+        hiddenOnMobile={!!activeId}
         onOpen={openConversation}
         onStart={startConversation}
         onJump={jumpToMessage}
@@ -441,7 +449,7 @@ export default function Messenger({ me, onSignedOut }) {
         onOpenSettings={() => setSettingsOpen(true)}
         onDismiss={dismissConversation}
       />
-      <main className="relative flex min-w-0 flex-1 flex-col">
+      <main className={`relative flex min-w-0 flex-1 flex-col ${activeId ? "" : "max-md:hidden"}`}>
         {active ? (
           <Thread
             key={active.id}
@@ -452,6 +460,7 @@ export default function Messenger({ me, onSignedOut }) {
             hasNewer={cursors[active.id]?.hasNewer ?? false}
             highlightId={highlight?.conversationId === active.id ? highlight.messageId : null}
             peerTyping={!!typing[active.id]}
+            onBack={() => setActiveId(null)}
             onSend={sendMessage}
             onTyping={sendTyping}
             onLoadOlder={loadOlder}

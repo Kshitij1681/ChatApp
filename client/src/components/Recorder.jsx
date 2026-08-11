@@ -145,7 +145,7 @@ export default function Recorder({ mode, disabled, onRecorded, onError, onBusyCh
           }
           if (e.key === "Escape" && armed) finish(true);
         }}
-        className={`grid size-8 shrink-0 place-items-center rounded-full transition-colors disabled:opacity-30 ${
+        className={`grid size-8 shrink-0 place-items-center rounded-full transition-colors disabled:opacity-30 max-md:size-9 ${
           armed
             ? cancelling
               ? "bg-post text-white"

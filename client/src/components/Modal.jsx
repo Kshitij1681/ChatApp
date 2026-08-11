@@ -63,10 +63,12 @@ export default function Modal({ title, onClose, children, labelledBy = "modal-ti
         aria-modal="true"
         aria-labelledby={labelledBy}
         tabIndex={-1}
-        className="rise w-full max-w-md overflow-hidden rounded-md border border-line bg-surface shadow-xl outline-none"
+        className="rise flex max-h-[90dvh] w-full max-w-md flex-col overflow-hidden rounded-md border border-line bg-surface shadow-xl outline-none"
       >
-        <div className="airmail-edge h-[3px]" />
-        <div className="px-5 py-4">
+        {/* The edge is a sibling of the scroller, not inside it, so a dialog
+            taller than the viewport scrolls its body and keeps its letterhead. */}
+        <div className="airmail-edge h-[3px] shrink-0" />
+        <div className="scroll-thin min-h-0 overflow-y-auto px-5 py-4">
           <h2 id={labelledBy} className="font-display text-lg font-semibold tracking-tight">
             {title}
           </h2>

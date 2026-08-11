@@ -24,7 +24,7 @@ export default function MessageBubble({ message, mine, showMeta, found, onDelete
     <div className={`group flex items-center gap-1 ${mine ? "justify-end" : "justify-start"}`}>
       {deletable ? <DeleteHandle onDelete={() => onDelete(message)} /> : null}
       <div
-        className={`rise max-w-[min(34rem,78%)] overflow-hidden rounded-md ${bare ? "p-1" : "px-3 py-2"} ${
+        className={`rise max-w-[min(34rem,88%)] overflow-hidden rounded-md md:max-w-[min(34rem,78%)] ${bare ? "p-1" : "px-3 py-2"} ${
           mine
             ? "rounded-br-sm bg-wire text-white"
             : "rounded-bl-sm border border-line bg-raised text-ink"
@@ -168,7 +168,7 @@ function Attachment({ message, mine }) {
 function Tombstone({ mine, at, showMeta }) {
   return (
     <div className={`flex ${mine ? "justify-end" : "justify-start"}`}>
-      <div className="max-w-[min(34rem,78%)] px-3 py-2">
+      <div className="max-w-[min(34rem,88%)] px-3 py-2 md:max-w-[min(34rem,78%)]">
         <span className="censored px-2 py-0.5 text-sm" aria-label="Message deleted">
           deleted
         </span>
