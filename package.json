@@ -1,0 +1,23 @@
+{
+  "name": "chat-app",
+  "private": true,
+  "version": "0.1.0",
+  "description": "1:1 direct messaging with presence, receipts, media, and real deletion.",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "setup": "npm install && npm --prefix server install && npm --prefix client install",
+    "install:all": "npm run setup",
+    "dev": "concurrently -n server,client -c magenta,cyan \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server start",
+    "test": "node --test server/protocol.test.js",
+    "test:e2e": "npm run build && node e2e/chat.test.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "mongodb": "^7.5.0",
+    "puppeteer-core": "^24.10.2"
+  }
+}

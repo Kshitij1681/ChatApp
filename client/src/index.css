@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+/*
+ * Aerogramme. Two people, a channel, a record.
+ * Airmail red and blue both act as accents — outbound leans red, inbound leans
+ * blue — which is why this palette carries two rather than the usual one.
+ */
+:root {
+  --c-ground: #e4e9e0; /* app chrome */
+  --c-surface: #edf0ea; /* thread paper */
+  --c-raised: #f6f8f3; /* inputs, cards */
+  --c-ink: #16233a; /* navy ink, not black */
+  --c-ink-soft: #4a5a70;
+  --c-faint: #8593a1;
+  --c-line: rgb(22 35 58 / 0.12);
+  --c-post: #c8443c; /* airmail red */
+  --c-wire: #2c4a8a; /* airmail blue */
+  --c-live: #3f8f5b;
+  --c-shadow: rgb(22 35 58 / 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-ground: #0e1622;
+    --c-surface: #141f2e;
+    --c-raised: #1c2938;
+    --c-ink: #e6ebf1;
+    --c-ink-soft: #a7b4c4;
+    --c-faint: #6e7f92;
+    --c-line: rgb(230 235 241 / 0.14);
+    --c-post: #e4685f;
+    --c-wire: #7fa8ff;
+    --c-live: #5cb77e;
+    --c-shadow: rgb(0 0 0 / 0.4);
+  }
+}
+
+/* `inline` keeps these as var() references so the media query above can swap
+   them at runtime, instead of Tailwind baking the light values in. */
+@theme inline {
+  --color-ground: var(--c-ground);
+  --color-surface: var(--c-surface);
+  --color-raised: var(--c-raised);
+  --color-ink: var(--c-ink);
+  --color-ink-soft: var(--c-ink-soft);
+  --color-faint: var(--c-faint);
+  --color-line: var(--c-line);
+  --color-post: var(--c-post);
+  --color-wire: var(--c-wire);
+  --color-live: var(--c-live);
+
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  * {
+    min-width: 0;
+  }
+
+  html {
+    color-scheme: light dark;
+  }
+
+  body {
+    margin: 0;
+    background: var(--c-ground);
+    color: var(--c-ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Condensed heavy for labels and the wordmark — airmail forms set their
+     field labels this way, and it keeps chrome from competing with messages. */
+  .eyebrow {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-faint);
+  }
+
+  /* @handles, timestamps, receipts, sizes: data, so mono. */
+  .data {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--c-wire);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--c-wire) 26%, transparent);
+  }
+}
+
+/* The one borrowed ornament: the red/blue barber stripe off an airmail
+   envelope. Used on the thread header edge only, never on message bubbles. */
+.airmail-edge {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--c-post) 0 7px,
+    transparent 7px 14px,
+    var(--c-wire) 14px 21px,
+    transparent 21px 28px
+  );
+}
+
+/* Signature element. A deleted message leaves a censor's bar where the words
+   were — the same thing that happened to wartime airmail, and an honest
+   picture of what the server now holds: a tombstone and nothing else. */
+.censored {
+  position: relative;
+  display: inline-block;
+  background: var(--c-ink);
+  color: transparent;
+  border-radius: 2px;
+  user-select: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: rise 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-line) transparent;
+}
